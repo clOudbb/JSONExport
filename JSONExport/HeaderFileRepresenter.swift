@@ -41,7 +41,8 @@ class HeaderFileRepresenter : FileRepresenter{
         fileContent = ""
         appendCopyrights()
         appendStaticImports()
-        appendImportParentHeader()
+//        appendImportParentHeader()
+        _appendImportParentHeader()
         appendCustomImports()
         
         //start the model defination
@@ -63,7 +64,7 @@ class HeaderFileRepresenter : FileRepresenter{
         appendProperties()
         appendInitializers()
         appendUtilityMethods()
-        fileContent += lang.modelEnd
+        fileContent += "\n\(lang.modelEnd!)"
         return fileContent
     }
     
@@ -155,7 +156,7 @@ class HeaderFileRepresenter : FileRepresenter{
     */
     override func appendInitializers()
     {
-        if !includeConstructors{
+        if !includeConstructors || lang.headerFileData.constructorSignatures.isEmpty {
             return
         }
         fileContent += "\n"
@@ -173,12 +174,25 @@ class HeaderFileRepresenter : FileRepresenter{
     */
     override func appendUtilityMethods()
     {
-        if !includeUtilities{
+        if !includeUtilities || lang.headerFileData.utilityMethodSignatures.isEmpty {
             return
         }
         fileContent += "\n"
         for methodSignature in lang.headerFileData.utilityMethodSignatures{
             fileContent += methodSignature
+        }
+    }
+    
+    
+    //MARK:- Private for bilibili
+    func _appendImportParentHeader()
+    {
+        if !lang.genericType.elementsEqual(NSStringFromClass(NSObject.self)) {
+            fileContent += lang.headerFileData.importParentHeaderFile.replacingOccurrences(of: modelWithParentClassName, with: lang.genericType)
+        } else {
+            if lang.headerFileData.importParentHeaderFile != nil && parentClassName.count > 0{
+                fileContent += lang.headerFileData.importParentHeaderFile.replacingOccurrences(of: modelWithParentClassName, with: parentClassName)
+            }
         }
     }
 }

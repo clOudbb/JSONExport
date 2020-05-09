@@ -92,6 +92,8 @@ class FileRepresenter{
     Generates the file content and stores it in the fileContent property
     */
     func toString() -> String{
+        if lang.langName.elementsEqual("ObjectiveC - Bilibili") { return _toStringForObjectiveC() }
+        
         fileContent = ""
         appendFirstLineStatement()
         appendCopyrights()
@@ -329,6 +331,10 @@ class FileRepresenter{
     */
     func appendUtilityMethods()
     {
+        if lang.langName.elementsEqual("ObjectiveC - Bilibili") {
+            _addUtilityMehtodForBilibili()
+            return
+        }
         if !includeUtilities{
             return
         }
@@ -394,8 +400,6 @@ class FileRepresenter{
             fileContent += method.returnStatement
             fileContent += method.bodyEnd
         }
-        
-        
     }
     
     /**
@@ -546,4 +550,113 @@ class FileRepresenter{
         
         return propertyStr
     }
+    
+    //MARK:- Private for Bilibili
+    func _toStringForObjectiveC() -> String {
+        fileContent = ""
+        appendFirstLineStatement()
+        appendCopyrights()
+        appendStaticImports()
+        appendHeaderFileImport()
+        appendConstVarDefinition()
+        appendCustomImports()
+        //start the model defination
+        var definition = ""
+        definition = lang.modelDefinition.replacingOccurrences(of: modelName, with: className)
+        fileContent += definition
+        //start the model content body
+        fileContent += "\(lang.modelStart)"
+        
+        appendProperties()
+        fileContent += "\n\(lang.modelEnd!)"
+        fileContent += lang.modelDefinitionImplementation
+        
+//        appendSettersAndGetters()
+//        appendInitializers()
+        appendUtilityMethods()
+        fileContent = fileContent.replacingOccurrences(of: lowerCaseModelName, with:className.lowercaseFirstChar())
+        fileContent = fileContent.replacingOccurrences(of: modelName, with:className)
+        fileContent += lang.modelEnd
+        return fileContent
+    }
+    
+    func _addUtilityMehtodForBilibili() {
+        if !includeUtilities{
+            return
+        }
+        fileContent += "\n"
+        for method in lang.utilityMethods{
+            if method.comment != nil{
+                fileContent += method.comment
+            }
+            fileContent += method.signature
+            fileContent += method.bodyStart
+            fileContent += method.body
+            for property in properties{
+                var propertyHandlingStr = ""
+                if property.jsonName.elementsEqual(property.nativeName) { continue }
+                
+                if method.signature.contains("modelContainerPropertyGenericClass") {
+                    if !property.isArray || !(property.sampleValue.firstObject is NSDictionary) { continue }
+                    
+                    propertyHandlingStr = method.forEachProperty
+                    propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: elementType, with: property.elementsType)
+                } else {
+                    if property.isArray{
+                        //                    if propertyTypeIsBasicType(property){
+                        propertyHandlingStr = method.forEachProperty
+                        
+                        //                    }else{
+                        //                        propertyHandlingStr = method.forEachArrayOfCustomTypeProperty
+                        //                    }
+                        propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: elementType, with: property.elementsType)
+                    }else{
+                        //                    if lang.basicTypesWithSpecialStoringNeeds != nil && method.forEachPropertyWithSpecialStoringNeeds != nil && lang.basicTypesWithSpecialStoringNeeds.index(of: property.type) != nil{
+                        //                        propertyHandlingStr = method.forEachPropertyWithSpecialStoringNeeds
+                        //                    }else{
+                        propertyHandlingStr = method.forEachProperty
+                        //                        if property.isCustomClass{
+                        //                            propertyHandlingStr = method.forEachCustomTypeProperty
+                        //                        }
+                        //                    }
+                        
+                    }
+                }
+
+                propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: varName, with:property.nativeName)
+                propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: constKeyName, with:property.constName!)
+                propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: varType, with:property.type)
+                
+                propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: jsonKeyName, with:property.jsonName)
+                
+                propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: additionalCustomTypeProperty, with:"")
+                if lang.basicTypesWithSpecialFetchingNeeds != nil{
+                    if let index = lang.basicTypesWithSpecialFetchingNeeds.index(of: property.type), let replacement = lang.basicTypesWithSpecialFetchingNeedsReplacements?[index]{
+                       propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: varTypeReplacement, with: replacement)
+                        
+                        var castString = String()
+                        if let cast = lang.basicTypesWithSpecialFetchingNeedsTypeCast?[index]{
+                            // if needs cast
+                            if !cast.isEmpty {
+                                castString = "(\(cast)) "
+                            }
+                            else {
+                                castString = cast
+                            }
+                        }
+                        propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: varTypeCast, with: castString)
+
+                        let lowerCaseType = property.type.lowercased()
+                        propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: lowerCaseVarType, with: lowerCaseType)
+                        
+                    }
+                }
+                fileContent += propertyHandlingStr
+            }
+            fileContent += "\t};\n"
+            fileContent += method.returnStatement
+            fileContent += method.bodyEnd
+        }
+    }
+    
 }

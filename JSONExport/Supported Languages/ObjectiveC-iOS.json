@@ -154,12 +154,15 @@
     }
   ],
   "constVarDefinition": "NSString *const <!ConstKeyName!> = @\"<!JsonKeyName!>\";\n",
-  "modelDefinition": "\n@interface <!ModelName!> ()\n@end\n@implementation <!ModelName!>\n",
+  "modelDefinition": "\n@interface <!ModelName!> ()\n",
+  "modelDefinitionImplementation": "\n@implementation <!ModelName!>\n",
   "genericType": "NSObject",
   "headerFileData": {
     "modelDefinitionWithParent": "\n@interface <!ModelName!> : <!ParentClass!>\n",
     "modelEnd": "@end",
-    "instanceVarDefinition": "@property (nonatomic, strong) <!VarType!> * <!VarName!>;\n",
+    "instanceVarDefinition": "@property (nonatomic, strong) <!VarType!> *<!VarName!>;\n",
+    "instanceVarCopyDefinition": "@property (nonatomic, copy) <!VarType!> *<!VarName!>;\n",
+    "instanceVarWithSpeicalDefinition": "@property (nonatomic, assign) <!VarType!> <!VarName!>;\n",
     "utilityMethodSignatures": [
       "-(NSDictionary *)toDictionary;\n"
     ],
@@ -179,7 +182,6 @@
     "headerFileExtension": "h",
     "modelDefinition": "\n@interface <!ModelName!> : NSObject\n",
     "importForEachCustomType": "#import \"<!ModelName!>.h\"\n",
-    "instanceVarWithSpeicalDefinition": "@property (nonatomic, assign) <!VarType!> <!VarName!>;\n",
     "staticImports": "#import <UIKit/UIKit.h>"
   },
   "fileExtension": "m",

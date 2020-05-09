@@ -85,28 +85,71 @@ class Property : Equatable{
     */
     var elementsAreOfCustomType = false
     
+    /// select reference type with class type
+    /// - Parameters:
+    ///   - type: property class type
+    ///   - forHeader: whether header file
+    /// - Returns: correctyle property
+    func _selectReferenceName(type: String, forHeader : Bool) -> String {
+        let split = lang.headerFileData.instanceVarDefinition.split(separator: ")")
+        let prefix = String(split.first!)
+        let suffix = String(split.last!)
+        var result = ""
+        var referenceName = ""
+        if (type == NSStringFromClass(NSString.self) ||
+            type == NSStringFromClass(NSArray.self) ||
+            type == NSStringFromClass(NSDictionary.self)) {
+            referenceName = "copy"
+        } else {
+            if lang.headerFileData.instanceVarWithSpeicalDefinition != nil && lang.headerFileData.typesNeedSpecialDefinition.index(of: type) != nil {
+                referenceName = "assign"
+            }
+        }
+        
+        result.append(prefix)
+        if !referenceName.isEmpty {
+            result = result.replacingOccurrences(of: "strong", with: referenceName)
+        }
+        if forHeader { result.append(", readonly)") }
+        else { result.append(")") }
+        result.append(suffix)
+        
+        if isArray {
+            let first = sampleValue.firstObject
+            if first is NSDictionary {
+                result = result.replacingOccurrences(of: "<!VarType!>", with: "<!VarType!><\(elementsType) *>")
+            } else if lang.basicTypesWithSpecialFetchingNeeds.contains(elementsType) {
+                result = result.replacingOccurrences(of: "<!VarType!>", with: "<!VarType!><\(NSStringFromClass(NSNumber.self)) *>")
+            }
+        }
+        return result
+    }
     /**
     Returns a valid property declaration using the LangModel.instanceVarDefinition value
     */
     func toString(_ forHeaderFile: Bool = false) -> String
     {
         var string : String!
-        if forHeaderFile{
-            if lang.headerFileData.instanceVarWithSpeicalDefinition != nil && lang.headerFileData.typesNeedSpecialDefinition.index(of: type) != nil{
-                string = lang.headerFileData.instanceVarWithSpeicalDefinition
+        if lang.langName.elementsEqual("ObjectiveC - Bilibili") {
+            string = _selectReferenceName(type: type, forHeader: forHeaderFile)
+        } else {
+            if forHeaderFile{
+                if lang.headerFileData.instanceVarWithSpeicalDefinition != nil && lang.headerFileData.typesNeedSpecialDefinition.index(of: type) != nil{
+                    string = lang.headerFileData.instanceVarWithSpeicalDefinition
+                }else{
+                    string = lang.headerFileData.instanceVarDefinition
+                }
+                
+                
             }else{
-                string = lang.headerFileData.instanceVarDefinition
-            }
-            
-            
-        }else{
-            if lang.instanceVarWithSpeicalDefinition != nil && lang.typesNeedSpecialDefinition.index(of: type) != nil{
-                string = lang.instanceVarWithSpeicalDefinition
-            }else{
-                string = lang.instanceVarDefinition
+                if lang.instanceVarWithSpeicalDefinition != nil && lang.typesNeedSpecialDefinition.index(of: type) != nil{
+                    string = lang.instanceVarWithSpeicalDefinition
+                }else{
+                    string = lang.instanceVarDefinition
+                }
+                
             }
         }
-        
         string = string.replacingOccurrences(of: varType, with: type)
         string = string.replacingOccurrences(of: varName, with: nativeName)
         string = string.replacingOccurrences(of: jsonKeyName, with: jsonName)

@@ -14,6 +14,7 @@ class HeaderFileData{
     var importForEachCustomType : String!
     var importParentHeaderFile : String!
     var instanceVarDefinition : String!
+    var instanceVarCopyDefinition : String!
     var instanceVarWithSpeicalDefinition : String!
     var modelDefinition : String!
     var modelDefinitionWithParent : String!
@@ -34,6 +35,7 @@ class HeaderFileData{
         importForEachCustomType = dictionary["importForEachCustomType"] as? String
         importParentHeaderFile = dictionary["importParentHeaderFile"] as? String
         instanceVarDefinition = dictionary["instanceVarDefinition"] as? String
+        instanceVarCopyDefinition = dictionary["instanceVarCopyDefinition"] as? String
         
         instanceVarWithSpeicalDefinition = dictionary["instanceVarWithSpeicalDefinition"] as? String
         modelDefinition = dictionary["modelDefinition"] as? String
