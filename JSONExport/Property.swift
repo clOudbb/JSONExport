@@ -122,6 +122,10 @@ class Property : Equatable{
                 result = result.replacingOccurrences(of: "<!VarType!>", with: "<!VarType!><\(NSStringFromClass(NSNumber.self)) *>")
             }
         }
+        
+        if referenceName == "assign" {
+            result = result.replacingOccurrences(of: "*", with: "")
+        }
         return result
     }
     /**
