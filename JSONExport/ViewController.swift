@@ -99,6 +99,28 @@ class ViewController: NSViewController, NSUserNotificationCenterDelegate, NSTabl
         loadLastSelectedLanguage()
         updateUIFieldsForSelectedLanguage()
 		self.tableView.backgroundColor = .clear
+        
+        _addOptions()
+    }
+    
+    func _addOptions() {
+        let mainMenu = NSApplication.shared.mainMenu
+        let submenu = NSMenu.init(title: "Option")
+        let mainDropdown = NSMenuItem(title: "Some option group", action: nil, keyEquivalent: "")
+        mainMenu?.addItem(mainDropdown)
+        mainMenu?.setSubmenu(submenu, for: mainDropdown)
+
+        let staticItem = NSMenuItem(title: "Disable static variables", action: #selector(_useStaticVar(_:)), keyEquivalent: "")
+        submenu.addItem(staticItem)
+    }
+    
+    @objc func _useStaticVar(_ sender: AnyObject) {
+        let mainMenu = NSApplication.shared.mainMenu
+        let option = mainMenu?.items.last?.submenu
+        let item = option?.items.first
+        item?.state = optionState(forItem: 0) ? NSControl.StateValue.off : NSControl.StateValue.on
+        
+        generateClasses()
     }
     
     /**
@@ -291,7 +313,23 @@ class ViewController: NSViewController, NSUserNotificationCenterDelegate, NSTabl
 		}
     }
     
-    
+    func _saveToDirectory(_ path: String) -> String {
+        let date = Date.init(timeIntervalSinceNow: 0)
+        let formatter = DateFormatter.init()
+        formatter.dateFormat = "yyyy-MM-dd HH-mm-ss"
+        let dateString = formatter.string(from: date)
+        let directoryPath = "\(path)/\(dateString)_ObjectiveC"
+        if !FileManager.default.fileExists(atPath: directoryPath) {
+            do {
+                try FileManager.default.createDirectory(atPath: directoryPath, withIntermediateDirectories: true, attributes: nil)
+            } catch let error as NSError {
+                showError(error)
+                break
+            }
+        }
+        
+        return directoryPath
+    }
     /**
      Saves all the generated files in the specified path
      
@@ -309,7 +347,11 @@ class ViewController: NSViewController, NSUserNotificationCenterDelegate, NSTabl
             if file is HeaderFileRepresenter{
                 fileExtension = selectedLang.headerFileData.headerFileExtension
             }
-            let filePath = "\(path)/\(file.className).\(fileExtension)"
+            
+            // add directory
+            let directoryPath = _saveToDirectory(path)
+            let filePath = "\(directoryPath)/\(file.className).\(fileExtension)"
+//            let filePath = "\(path)/\(file.className).\(fileExtension)"
             
             do {
                 try fileContent.write(toFile: filePath, atomically: false, encoding: String.Encoding.utf8)

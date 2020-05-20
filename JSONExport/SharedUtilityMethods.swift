@@ -194,3 +194,9 @@ func runOnUiThread(_ task: @escaping () -> Void)
     })
 }
 
+func optionState(forItem: Int) -> Bool {
+    let mainMenu = NSApplication.shared.mainMenu
+    let option = mainMenu?.items.last?.submenu
+    let item = option?.items[forItem]
+    return item?.state == NSControl.StateValue.on
+}

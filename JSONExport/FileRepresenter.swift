@@ -158,11 +158,15 @@ class FileRepresenter{
     
     func appendConstVarDefinition()
     {
+        let state = optionState(forItem: 0)
         if lang.constVarDefinition != nil {
             fileContent += "\n"
         }
         for property in properties{
-            fileContent += property.toConstVar(className)
+            let constName = property.toConstVar(className)
+            if state { continue }
+            
+            fileContent += constName
         }
     }
     
@@ -624,7 +628,9 @@ class FileRepresenter{
                 }
 
                 propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: varName, with:property.nativeName)
-                propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: constKeyName, with:property.constName!)
+                let disableStatic = optionState(forItem: 0)
+                propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: constKeyName, with:disableStatic ? "@\"\(property.jsonName)\"" : property.constName! )
+                
                 propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: varType, with:property.type)
                 
                 propertyHandlingStr = propertyHandlingStr.replacingOccurrences(of: jsonKeyName, with:property.jsonName)
