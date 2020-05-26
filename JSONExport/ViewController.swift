@@ -318,13 +318,12 @@ class ViewController: NSViewController, NSUserNotificationCenterDelegate, NSTabl
         let formatter = DateFormatter.init()
         formatter.dateFormat = "yyyy-MM-dd HH-mm-ss"
         let dateString = formatter.string(from: date)
-        let directoryPath = "\(path)/\(dateString)_ObjectiveC"
+        let directoryPath = "\(path)/\(classNameField.stringValue.count == 0 ? "RootClass " : "\(classNameField.stringValue) ")\(dateString)"
         if !FileManager.default.fileExists(atPath: directoryPath) {
             do {
                 try FileManager.default.createDirectory(atPath: directoryPath, withIntermediateDirectories: true, attributes: nil)
             } catch let error as NSError {
                 showError(error)
-                break
             }
         }
         

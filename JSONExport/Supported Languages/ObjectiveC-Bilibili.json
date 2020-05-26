@@ -11,12 +11,12 @@
     "longValue"
   ],
   "basicTypesWithSpecialStoringNeeds": [
-    "NSInteger",
+    "SInt64",
     "BOOL",
     "char",
     "CGFloat",
     "double",
-    "long"
+    "SInt64"
   ],
   "importForEachCustomType": "",
   "reservedKeywords": [
@@ -49,7 +49,7 @@
     "instanceof",
     "int",
     "interface",
-    "long",
+    "SInt64",
     "native",
     "new",
     "null",
@@ -92,7 +92,7 @@
         "forEachCustomTypeProperty": "",
     },
     {
-        "comment": "\n/**\nThe generic class mapper for container properties.\n\n@discussion If the property is a container object, such as NSArray/NSSet/NSDictionary, implements this method and returns a property->class mapper, tells which kind of object will be add to the array/set/dictionary.\n\n@return A class mapper.\n*/\n",
+        "comment": "/**\nThe generic class mapper for container properties.\n\n@discussion If the property is a container object, such as NSArray/NSSet/NSDictionary, implements this method and returns a property->class mapper, tells which kind of object will be add to the array/set/dictionary.\n\n@return A class mapper.\n*/\n",
         "signature": "+ (NSDictionary<NSString *, Class <BBLiveBaseModel>> *)modelContainerPropertyGenericClass",
         "bodyStart": " {\n",
         "body": "\t<!ModelName!> *sample;\n\tNSDictionary *mapper = @{\n",
@@ -110,8 +110,8 @@
     "floatType": "CGFloat",
     "doubleType": "double",
     "characterType": "char",
-    "longType": "long",
-    "intType": "NSInteger"
+    "longType": "SInt64",
+    "intType": "SInt64"
   },
   "wordsToRemoveToGetArrayElementsType": [
     "NSArray",
@@ -134,12 +134,12 @@
     "constructorSignatures": [
     ],
     "typesNeedSpecialDefinition": [
-      "NSInteger",
+      "SInt64",
       "BOOL",
       "char",
       "CGFloat",
       "double",
-      "long"
+      "SInt64"
     ],
     "modelStart": "",
     "importParentHeaderFile": "#import \"<!ParentClass!>.h\"\n",
@@ -151,12 +151,12 @@
   "fileExtension": "m",
   "arrayType": "NSArray",
   "basicTypesWithSpecialFetchingNeeds": [
-    "NSInteger",
+    "SInt64",
     "BOOL",
     "char",
     "CGFloat",
     "double",
-    "long"
+    "SInt64"
   ],
   "displayLangName": "ObjectiveC - Bilibili",
   "instanceVarDefinition": "",
