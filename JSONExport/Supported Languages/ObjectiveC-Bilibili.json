@@ -162,6 +162,6 @@
   "instanceVarDefinition": "",
   "supportsFirstLineStatement": "false",
   "modelEnd": "@end",
-  "staticImports": "",
+  "staticImports": "#import <BBLiveBaseCore/BBLiveBaseCore.h>\n#import <ReactiveCocoa/RACEXTKeyPathCoding.h>",
   "importHeaderFile": "#import \"<!ModelName!>.h\"\n"
 }
