@@ -32,6 +32,7 @@
 
 import Foundation
 import AddressBook
+import Contacts
 
 /**
 FileRepresenter is used to generate a valid syntax for the target language that represents JSON object
@@ -175,42 +176,45 @@ class FileRepresenter{
     */
     func appendCopyrights()
     {
+        // using custom
         fileContent += "//\n//\t\(className).\(lang.fileExtension)\n"
-        if let me = ABAddressBook.shared()?.me(){
-            
-            if let firstName = me.value(forProperty: kABFirstNameProperty as String) as? String{
-                fileContent += "//\n//\tCreate by \(firstName)"
-                if let lastName = me.value(forProperty: kABLastNameProperty as String) as? String{
-                   fileContent += " \(lastName)"
-                }
-            }
-            
-            
-            fileContent += " on \(getTodayFormattedDay())\n//\tCopyright © \(getYear())"
-            
-            if let organization = me.value(forProperty: kABOrganizationProperty as String) as? String{
-                fileContent += " \(organization)"
-            }
-            
-            fileContent += ". All rights reserved.\n"
-        }
-        
-        fileContent += "//\tModel file generated using JSONExport: https://github.com/Ahmed-Ali/JSONExport"
-        
-        if let langAuthor = lang.author{
-            fileContent += "\n\n//\tThe \"\(lang.displayLangName!)\" support has been made available by \(langAuthor.name!)"
-            if let email = langAuthor.email{
-                fileContent += "(\(email))"
-            }
-            
-            if let website = langAuthor.website{
-                fileContent += "\n//\tMore about him/her can be found at his/her website: \(website)"
-            }
-            
-        }
-        
-        
-        fileContent += "\n\n"
+        _appendCopyrights()
+//        fileContent += "//\n//\t\(className).\(lang.fileExtension)\n"
+//        if let me = ABAddressBook.shared()?.me(){
+//
+//            if let firstName = me.value(forProperty: kABFirstNameProperty as String) as? String{
+//                fileContent += "//\n//\tCreate by \(firstName)"
+//                if let lastName = me.value(forProperty: kABLastNameProperty as String) as? String{
+//                   fileContent += " \(lastName)"
+//                }
+//            }
+//
+//
+//            fileContent += " on \(getTodayFormattedDay())\n//\tCopyright © \(getYear())"
+//
+//            if let organization = me.value(forProperty: kABOrganizationProperty as String) as? String{
+//                fileContent += " \(organization)"
+//            }
+//
+//            fileContent += ". All rights reserved.\n"
+//        }
+//
+//        fileContent += "//\tModel file generated using JSONExport: https://github.com/Ahmed-Ali/JSONExport"
+//
+//        if let langAuthor = lang.author{
+//            fileContent += "\n\n//\tThe \"\(lang.displayLangName!)\" support has been made available by \(langAuthor.name!)"
+//            if let email = langAuthor.email{
+//                fileContent += "(\(email))"
+//            }
+//
+//            if let website = langAuthor.website{
+//                fileContent += "\n//\tMore about him/her can be found at his/her website: \(website)"
+//            }
+//
+//        }
+//
+//
+//        fileContent += "\n\n"
     }
     
     /**
@@ -555,7 +559,7 @@ class FileRepresenter{
         return propertyStr
     }
     
-    //MARK:- Private for Bilibili
+    //MARK:- Private for cutom
     func _toStringForObjectiveC() -> String {
         fileContent = ""
         appendFirstLineStatement()
@@ -665,4 +669,29 @@ class FileRepresenter{
         }
     }
     
+    func _appendCopyrights() {
+        if let me = ABAddressBook.shared()?.me(){
+            
+            if let firstName = me.value(forProperty: kABLastNameProperty as String) as? String{
+                fileContent += "//\n//\tCreate by \(firstName)"
+                if let lastName = me.value(forProperty: kABFirstNameProperty as String) as? String{
+                   fileContent += "\(lastName)"
+                }
+            }
+            
+            
+            fileContent += " on \(getTodayFormattedDay())\n//\tCopyright © \(getYear()) Bilibili"
+            
+            if let organization = me.value(forProperty: kABOrganizationProperty as String) as? String{
+                fileContent += " \(organization)"
+            }
+            
+            fileContent += ". All rights reserved.\n"
+        }
+        
+        fileContent += "//"
+//        fileContent += "//\tModel file generated using JSONExport: https://github.com/Ahmed-Ali/JSONExport"
+        
+        fileContent += "\n\n"
+    }
 }

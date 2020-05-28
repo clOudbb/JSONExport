@@ -32,6 +32,7 @@
 //
 
 import Cocoa
+import Contacts
 
 class ViewController: NSViewController, NSUserNotificationCenterDelegate, NSTableViewDelegate, NSTableViewDataSource, NSTextViewDelegate {
     
@@ -522,5 +523,19 @@ class ViewController: NSViewController, NSUserNotificationCenterDelegate, NSTabl
     }
     
     
+    
+    //MARK: - Private for custom
+    
+    func _requestAuthorzation() {
+        let store = CNContactStore.init()
+        let status = CNContactStore.authorizationStatus(for: .contacts)
+        if status != .notDetermined { return }
+        
+        store.requestAccess(for: .contacts, completionHandler: {_,_ in })
+//        store.requestAccess(for: .contacts) { [weak self] (success, error) in
+//            guard nil == error && success else { return }
+//
+//        }
+    }
     
 }

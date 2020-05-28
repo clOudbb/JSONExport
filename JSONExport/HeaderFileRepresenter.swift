@@ -93,26 +93,28 @@ class HeaderFileRepresenter : FileRepresenter{
     */
     override func appendCopyrights()
     {
-        if let me = ABAddressBook.shared()?.me(){
-            fileContent += "//\n//\t\(self.className).\(lang.headerFileData.headerFileExtension!)\n"
-            if let firstName = me.value(forProperty: kABFirstNameProperty as String) as? String{
-                fileContent += "//\n//\tCreate by \(firstName)"
-                if let lastName = me.value(forProperty: kABLastNameProperty as String) as? String{
-                    fileContent += " \(lastName)"
-                }
-            }
-            
-            
-            fileContent += " on \(getTodayFormattedDay())\n//\tCopyright © \(getYear())"
-            
-            if let organization = me.value(forProperty: kABOrganizationProperty as String) as? String{
-                fileContent += " \(organization)"
-            }
-            
-            fileContent += ". All rights reserved.\n//\n\n"
-            //fileContent += "//\tModel file Generated using JSONExport: https://github.com/Ahmed-Ali/JSONExport\n\n"
-        }
-        
+        fileContent += "//\n//\t\(self.className).\(lang.headerFileData.headerFileExtension!)\n"
+        _appendCopyrights()
+//        if let me = ABAddressBook.shared()?.me(){
+//            fileContent += "//\n//\t\(self.className).\(lang.headerFileData.headerFileExtension!)\n"
+//            if let firstName = me.value(forProperty: kABFirstNameProperty as String) as? String{
+//                fileContent += "//\n//\tCreate by \(firstName)"
+//                if let lastName = me.value(forProperty: kABLastNameProperty as String) as? String{
+//                    fileContent += " \(lastName)"
+//                }
+//            }
+//
+//
+//            fileContent += " on \(getTodayFormattedDay())\n//\tCopyright © \(getYear())"
+//
+//            if let organization = me.value(forProperty: kABOrganizationProperty as String) as? String{
+//                fileContent += " \(organization)"
+//            }
+//
+//            fileContent += ". All rights reserved.\n//\n\n"
+//            //fileContent += "//\tModel file Generated using JSONExport: https://github.com/Ahmed-Ali/JSONExport\n\n"
+//        }
+//
     }
     
     
@@ -184,9 +186,8 @@ class HeaderFileRepresenter : FileRepresenter{
     }
     
     
-    //MARK:- Private for bilibili
-    func _appendImportParentHeader()
-    {
+    //MARK:- Private for custom
+    func _appendImportParentHeader() {
         if !lang.genericType.elementsEqual(NSStringFromClass(NSObject.self)) {
             fileContent += lang.headerFileData.importParentHeaderFile.replacingOccurrences(of: modelWithParentClassName, with: lang.genericType)
         } else {
