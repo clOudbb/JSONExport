@@ -86,19 +86,19 @@
         "body": "\t<!ModelName!> *sample;\n\tNSDictionary *mapper = @{\n",
         "forEachProperty": "\t\t@keypath2(sample, <!VarName!>): <!ConstKeyName!>,\n",
         "forEachPropertyWithSpecialStoringNeeds": "",
-        "returnStatement": "\treturn [[super modelCustomPropertyMapper] BBLiveBaseDictionaryByAddingDictionary:mapper];\n",
+        "returnStatement": "\treturn [[super modelCustomPropertyMapper] md_dictionaryByAddingDictionary:mapper];\n",
         "bodyEnd": "}\n\n",
         "forEachArrayOfCustomTypeProperty": "",
         "forEachCustomTypeProperty": "",
     },
     {
         "comment": "/**\nThe generic class mapper for container properties.\n\n@discussion If the property is a container object, such as NSArray/NSSet/NSDictionary, implements this method and returns a property->class mapper, tells which kind of object will be add to the array/set/dictionary.\n\n@return A class mapper.\n*/\n",
-        "signature": "+ (NSDictionary<NSString *, Class <BBLiveBaseModel>> *)modelContainerPropertyGenericClass",
+        "signature": "+ (NSDictionary<NSString *, Class <MDObject>> *)modelContainerPropertyGenericClass",
         "bodyStart": " {\n",
         "body": "\t<!ModelName!> *sample;\n\tNSDictionary *mapper = @{\n",
         "forEachProperty": "\t\t@keypath2(sample, <!VarName!>): [<!ElementType!> class],\n",
         "forEachPropertyWithSpecialStoringNeeds": "",
-        "returnStatement": "\treturn [[super modelContainerPropertyGenericClass] BBLiveBaseDictionaryByAddingDictionary:mapper];\n",
+        "returnStatement": "\treturn [[super modelContainerPropertyGenericClass] md_dictionaryByAddingDictionary:mapper];\n",
         "bodyEnd": "}\n\n",
         "forEachArrayOfCustomTypeProperty": "",
         "forEachCustomTypeProperty": "",
@@ -122,7 +122,7 @@
   "constVarDefinition": "NSString *const <!ConstKeyName!> = @\"<!JsonKeyName!>\";\n",
   "modelDefinition": "\n@interface <!ModelName!> ()\n",
   "modelDefinitionImplementation": "\n\n@implementation <!ModelName!>",
-  "genericType": "BBLiveBaseModel",
+  "genericType": "MDEntity",
   "headerFileData": {
     "modelDefinitionWithParent": "\n@interface <!ModelName!> : <!ParentClass!>\n",
     "modelEnd": "@end",
@@ -142,9 +142,9 @@
       "SInt64"
     ],
     "modelStart": "",
-    "importParentHeaderFile": "#import \"<!ParentClass!>.h\"\n",
+    "importParentHeaderFile": "#import <MDObject/MDObject.h>\n",
     "headerFileExtension": "h",
-    "modelDefinition": "\n@interface <!ModelName!> : BBLiveBaseModel\n",
+    "modelDefinition": "\n@interface <!ModelName!> : MDEntity\n",
     "importForEachCustomType": "#import \"<!ModelName!>.h\"\n",
     "staticImports": "#import <UIKit/UIKit.h>"
   },
@@ -162,6 +162,6 @@
   "instanceVarDefinition": "",
   "supportsFirstLineStatement": "false",
   "modelEnd": "@end",
-  "staticImports": "#import <BBLiveBaseCore/BBLiveBaseCore.h>\n#import <ReactiveCocoa/RACEXTKeyPathCoding.h>",
+  "staticImports": "#import <MDCategory/MDCategory.h>\n#import <libextobjc/EXTKeyPathCoding.h>",
   "importHeaderFile": "#import \"<!ModelName!>.h\"\n"
 }
